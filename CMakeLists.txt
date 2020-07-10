@@ -7,6 +7,11 @@ cmake_minimum_required(VERSION 2.8)
 # Set project name
 project(SerialPortProject)
 
+# Ignore MSVC deprecated warnings:
+if (MSVC)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
+
 # List of files
 set(source_files
 )
