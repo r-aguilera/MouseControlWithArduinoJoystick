@@ -5,6 +5,7 @@
 #include <WinUser.h>
 
 #define MAX_DATA_LENGTH 255
+#define JOSTICK_DELAY 20
 #define REDUCTION_FACTOR 20
 
 char *portName = "\\\\.\\COM3";
@@ -41,13 +42,13 @@ int main() {
         
         for (int i = 0; arduino->isConnected() && i < 2; ++i) { // Toss the two first readings
             arduino->readSerialPort(incomingData, MAX_DATA_LENGTH);
-            Sleep(20);
+            Sleep(JOSTICK_DELAY);
         }
 
         int Xpos, Ypos, SWstate, Xpos_i, Ypos_i, SWstate_i;
 
         readData(Xpos_i, Ypos_i, SWstate_i);    // First reading, taken as reference (DON'T MOVE THE JOYSTICK!)
-        Sleep(20);
+        Sleep(JOSTICK_DELAY);
 
         while (arduino->isConnected()) {
             readData(Xpos, Ypos, SWstate);
@@ -63,7 +64,7 @@ int main() {
             input.mi.time = 0;
             SendInput(1, &input, sizeof(INPUT));
 
-            Sleep(20);
+            Sleep(JOSTICK_DELAY);
         }
     }
 }
