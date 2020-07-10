@@ -1,5 +1,5 @@
 #define BAUD 9600
-#define DELAY_TIME 50
+#define DELAY_TIME 20
 
 String DataToSend;
 String Delim = ",";
