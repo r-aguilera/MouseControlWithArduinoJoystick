@@ -23,13 +23,16 @@ SerialPort *arduino;
 const unsigned int BLINKING_DELAY = 1000;
 
 //If you want to send data then define "SEND" else comment it out
-#define SEND
+//#define SEND
 
 void exampleReceiveData(void)
 {
     int readResult = arduino->readSerialPort(incomingData, MAX_DATA_LENGTH);
-    printf("%s", incomingData);
-    Sleep(10);
+    char *tokenX, *tokenY, *tokenSW;
+    tokenX = strtok(incomingData, ",");
+    tokenY = strtok(NULL, ",");
+    tokenSW = strtok(NULL, ",");
+    Sleep(20);
 }
 
 void exampleWriteData(unsigned int delayTime)
