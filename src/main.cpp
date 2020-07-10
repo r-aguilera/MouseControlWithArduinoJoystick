@@ -47,8 +47,11 @@ int main() {
 
         int Xpos, Ypos, SWstate, Xpos_i, Ypos_i, SWstate_i;
 
-        readData(Xpos_i, Ypos_i, SWstate_i);    // First reading, taken as reference (DON'T MOVE THE JOYSTICK!)
-        Sleep(JOSTICK_DELAY);
+        if (arduino->isConnected()) {
+            readData(Xpos_i, Ypos_i, SWstate_i);    // First reading, taken as reference (DON'T MOVE THE JOYSTICK!)
+            Sleep(JOSTICK_DELAY);
+        }
+        
 
         while (arduino->isConnected()) {
             readData(Xpos, Ypos, SWstate);
