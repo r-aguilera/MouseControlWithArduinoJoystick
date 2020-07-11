@@ -14,9 +14,9 @@ Just a common 5 pin joystick, USB cable and jumper wires:
 
 Cmake:
 
-> **Where is the source code:**  YourDirectory/SerialPort
+> **Where is the source code:**  YourDirectory/MouseControlWithArduinoJoystick
 
-> **Where to build the binaries:** YourDirectory/SerialPort/build
+> **Where to build the binaries:** YourDirectory/MouseControlWithArduinoJoystick/build
 
  Create the directory if applicable, configure then generate. Build all in Visual Studio.
  
