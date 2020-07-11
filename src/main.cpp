@@ -6,7 +6,7 @@
 
 #define MAX_DATA_LENGTH 255
 #define JOSTICK_DELAY 20
-#define REDUCTION_FACTOR 20
+#define REDUCTION_FACTOR 35
 
 char *portName = "\\\\.\\COM3";
 char incomingData[MAX_DATA_LENGTH];
@@ -45,28 +45,33 @@ int main() {
             Sleep(JOSTICK_DELAY);
         }
 
-        int Xpos, Ypos, SWstate, Xpos_i, Ypos_i, SWstate_i;
+        int Xpos, Ypos, SWstate, Xpos_i, Ypos_i, SWstate_i, SWstate_last;
 
         if (arduino->isConnected()) {
             readData(Xpos_i, Ypos_i, SWstate_i);    // First reading, taken as reference (DON'T MOVE THE JOYSTICK!)
             Sleep(JOSTICK_DELAY);
         }
-        
+        SWstate_last = SWstate_i;
 
         while (arduino->isConnected()) {
             readData(Xpos, Ypos, SWstate);
             std::cout << Xpos << "\t" << Ypos << "\t" << SWstate << std::endl;
-           
+                       
             INPUT input;
             input.type = INPUT_MOUSE;
             input.mi.dx = (LONG)((Xpos - Xpos_i) / REDUCTION_FACTOR);
             input.mi.dy = (LONG)((Ypos - Ypos_i) / REDUCTION_FACTOR);
-            input.mi.dwFlags = (MOUSEEVENTF_MOVE);// | MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP);
+            input.mi.dwFlags = (MOUSEEVENTF_MOVE);
+            if (SWstate != SWstate_last && SWstate != SWstate_i)
+                input.mi.dwFlags = (MOUSEEVENTF_LEFTDOWN);
+            else if (SWstate != SWstate_last && SWstate == SWstate_i)
+                input.mi.dwFlags = (MOUSEEVENTF_LEFTUP);
             input.mi.mouseData = 0;
             input.mi.dwExtraInfo = NULL;
             input.mi.time = 0;
             SendInput(1, &input, sizeof(INPUT));
 
+            SWstate_last = SWstate;
             Sleep(JOSTICK_DELAY);
         }
     }
