@@ -14,6 +14,11 @@ char incomingData[MAX_DATA_LENGTH];
 // Arduino SerialPort global object
 SerialPort *arduino;
 
+// Joystick variables: X and Y position and switch (push button) state
+int Xpos    =   0,  Ypos    =   0,  SWstate         =   0,  // Current readings, used to simulate a mouse
+    Xpos_i  =   0,  Ypos_i  =   0,  SWstate_i       =   0,  // First readings, used as reference
+                                    SWstate_last    =   0;  // Last switch reading, used to properly simulate left clicks
+
 // String data from joystick to int variables
 int readData(int& X, int& Y, int& SW) {
     int bytesCount = arduino->readSerialPort(incomingData, MAX_DATA_LENGTH);
@@ -40,18 +45,19 @@ int main() {
         if (arduino->isConnected()) {
             std::cout << std::endl << "Connection established at port " << portName << std::endl;
         }
-        
-        for (int i = 0; arduino->isConnected() && i < 2; ++i) { // Toss the two first readings
+
+        // Toss the two first readings
+        for (int i = 0; arduino->isConnected() && i < 2; ++i) { 
             arduino->readSerialPort(incomingData, MAX_DATA_LENGTH);
             Sleep(JOSTICK_DELAY);
         }
 
-        int Xpos, Ypos, SWstate, Xpos_i, Ypos_i, SWstate_i, SWstate_last;
-
+        // First reading, taken as reference (DON'T MOVE THE JOYSTICK!)
         if (arduino->isConnected()) {
-            readData(Xpos_i, Ypos_i, SWstate_i);    // First reading, taken as reference (DON'T MOVE THE JOYSTICK!)
+            readData(Xpos_i, Ypos_i, SWstate_i);    
             Sleep(JOSTICK_DELAY);
         }
+
         SWstate_last = SWstate_i;
 
         while (arduino->isConnected()) {
