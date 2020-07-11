@@ -15,14 +15,15 @@ char incomingData[MAX_DATA_LENGTH];
 SerialPort *arduino;
 
 // String data from joystick to int variables
-void readData(int& X, int& Y, int& SW) {
-    int readResult = arduino->readSerialPort(incomingData, MAX_DATA_LENGTH);
+int readData(int& X, int& Y, int& SW) {
+    int bytesCount = arduino->readSerialPort(incomingData, MAX_DATA_LENGTH);
     char *tokenX = strtok(incomingData, ",");
     char *tokenY = strtok(NULL, ",");
     char *tokenSW = strtok(NULL, ",");
     sscanf(tokenX, "%d", &X);
     sscanf(tokenY, "%d", &Y);
     sscanf(tokenSW, "%d", &SW);
+    return bytesCount;
 }
 
 int main() {
