@@ -1,81 +1,38 @@
-# SerialPort
+# :computer_mouse: Mouse Control with Arduino joystick :computer_mouse:
+---
+# C++ Library to control your mouse, using [SerialPort](https://github.com/manashmandal/SerialPort) library.
 
-## C++ Library for Serial Communication with following criteria
+## Circuit Diagram
 
-*  Plain C++ Compatible
-*  Windows Supported
-*  Include and Run Type Library
-*  supports softwareserial
-*  supports serial event
-*  fixed minor bugs
+Just a common 5 pin joystick, USB cable and jumper wires:
 
-## Documentation
-[Here is a blog post about the library](https://medium.com/@ManashMandal/serial-communication-with-an-arduino-using-c-on-windows-d08710186498#.f94efw74b)
+<img src="https://exploreembedded.com/wiki/images/5/5f/0_Joystick_with_Arduino_bb.png" width="400">
 
-### Initialization
-```cpp
-#include "SerialPort.hpp"
-#include <iostream>
+## How to build and use
 
-const char *portName = "\\\\.\\COM20";
+### CMake and Visual Studio
 
-//Declare a global object
-SerialPort *arduino;
+Cmake:
 
-int main(void)
-{
-  arduino = new SerialPort(portName);
-  std::cout << "Is connected: " << arduino->isConnected() << std::endl;
-}
-```
+> **Where is the source code:**  YourDirectory/SerialPort
 
-### Sending Data
-```cpp
-#define DATA_LENGTH 255
+> **Where to build the binaries:** YourDirectory/SerialPort/build
 
-#include "SerialPort.hpp"
-#include <iostream>
+ Create the directory if applicable, configure then generate. Build all in Visual Studio.
+ 
+ Execute **SerialPortExecutable.exe** then uppload **joystickSendData.ino** to your Arduino.
+ 
+ Move the joystick to control the mouse cursor and push it to press right click button!
+ 
+## Issues
+### - C++ executable must be opened before connecting Arduino (crash otherwise)
 
-const char *portName = "\\\\.\\COM20";
+Just a beginner, this is probably due to my lack of telecommunications concepts.
 
-//Declare a global object
-SerialPort *arduino;
+### - Disconecting Arduino causes runtime crash
 
-//Here '\n' is a delimiter 
-const char *sendString = "Hello World\n"; 
+Maybe better ``` arduino->isConnected()```  checks can solve this problem.
 
-int main(void)
-{
-  arduino = new SerialPort(portName);
-  if (arduino->isConnected()){
-    bool hasWritten = arduino->writeSerialPort(sendString, DATA_LENGTH);
-    if (hasWritten) std::cout << "Data Written Successfully" << std::endl;
-    else std::cerr << "Data was not written" << std::endl;
-  }
-}
-```
+### - Random crashes are few and far between, but there are
 
-### Receiving Data
-```cpp
-#define DATA_LENGTH 255
-
-#include "SerialPort.hpp"
-#include <iostream>
-
-const char *portName = "\\\\.\\COM20";
-
-//Declare a global object
-SerialPort *arduino;
-
-char receivedString[DATA_LENGTH];
-
-int main(void)
-{
-  arduino = new SerialPort(portName);
-  if (arduino->isConnected()){
-    int hasRead = arduino->readSerialPort(receivedString, DATA_LENGTH);
-    if (hasRead) std::cout <<  receivedString << "\n";
-    else std::cerr << "Error occured reading data" << "\n";
-  }
-}
-```
+Serial buffer issue?
